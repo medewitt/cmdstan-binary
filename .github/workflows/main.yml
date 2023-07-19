@@ -13,7 +13,14 @@ on:
         - main 
 jobs:
     R-CMD-check:
+      max-parallel: 1
       runs-on: ${{ matrix.config.os }}
+      env:
+        GITHUB_PAT: ${{secrets.PAT}}
+        ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+        CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
   
       name: ${{ matrix.config.os }} (${{ matrix.config.r }})
   
@@ -67,7 +74,7 @@ jobs:
             done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
         - name: Set path for RTools 4.3
           if: runner.os == 'Windows'
-          run: echo "C:/rtools43/usr/bin;C:/rtools43/mingw64/bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+          run: echo "C:/rtools43/usr/bin;C:/rtools43/ucrt64/bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
   
         - name: Install mingw32-make and check toolchain path
           if: runner.os == 'Windows'
