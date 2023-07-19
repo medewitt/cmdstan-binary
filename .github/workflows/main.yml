@@ -15,7 +15,7 @@ jobs:
     R-CMD-check:
       runs-on: ${{ matrix.config.os }}
       env:
-        GITHUB_PAT: ${{secrets.PAT}}
+        GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
@@ -45,8 +45,6 @@ jobs:
           with:
             r-version: ${{ matrix.config.r }}
             http-user-agent: ${{ matrix.config.http-user-agent }}
-  
-        - uses: r-lib/actions/setup-pandoc@v1
   
         - name: Query dependencies
           run: |
