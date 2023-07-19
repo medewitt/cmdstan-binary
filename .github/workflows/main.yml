@@ -65,9 +65,9 @@ jobs:
             do
               eval sudo $cmd
             done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
-        - name: Set path for RTools 4.0
+        - name: Set path for RTools 4.3
           if: runner.os == 'Windows'
-          run: echo "C:/rtools40/usr/bin;C:/rtools40/mingw64/bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+          run: echo "C:/rtools43/usr/bin;C:/rtools43/mingw64/bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
   
         - name: Install mingw32-make and check toolchain path
           if: runner.os == 'Windows'
@@ -110,20 +110,3 @@ jobs:
             git add .
             git commit -m "Update the latest data" -a || echo "No changes to commit"
             git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:${{ github.ref }} || echo "No changes to commit"
-        - id: release
-          run: |
-            patch_version=${{ github.event.inputs.patch_version }}
-            [ ! -z $patch_version ] && patch_version="."$patch_version
-            # if so, append to usual montly number
-            current_tag="$(date '+%Y.%m.%d')${patch_version}"
-            daily_release="v${current_tag}"
-            
-            git tag -f $daily_release
-            git push
-            git push -f --tags
-            
-            
-        - name: Check Output Parameters
-          run: |
-            echo "Got tag name ${{ steps.release.outputs.tag_name }}"
-            echo "Got release version ${{ steps.release.outputs.version }}"
